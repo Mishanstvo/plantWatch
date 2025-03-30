@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
+    implementation 'com.google.code.gson:gson:2.8.8' // Добавьте это, если у вас нет Gson
+
+}

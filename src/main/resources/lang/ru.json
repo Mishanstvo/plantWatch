@@ -1,0 +1,14 @@
+{
+    "plugin.enabled": "Плагин активирован.",
+    "plugin.disabled": "Плагин приостановлен.",
+    "plugin.reloaded": "Плагин перезагружен.",
+    "command.usage": "Использование команды: /plantwatch [stats|pause|setinterval <interval>]",
+    "stats.title": "Статистика PlantWatch:",
+    "update.interval": "Интервал обновления: %d",
+    "batch.update": "Пакетное обновление: %b",
+    "max.updates.per.tick": "Макс. обновлений за тик: %d",
+    "player.radius.check": "Проверка радиуса игрока: %d",
+    "currently.updating": "В данный момент обновляется %d растений.",
+    "invalid.interval": "Недопустимый интервал."
+  }
+  

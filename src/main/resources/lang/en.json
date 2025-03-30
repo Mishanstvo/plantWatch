@@ -1,0 +1,14 @@
+{
+    "plugin.enabled": "PlantWatch Plugin enabled!",
+    "plugin.disabled": "PlantWatch Plugin disabled!",
+    "plugin.reloaded": "PlantWatch Plugin reloaded!",
+    "update.interval": "Update Interval: %d", 
+    "command.usage": "Usage: /plantwatch <stats|pause|setinterval|reloadconfig>",
+    "stats.title": "PlantWatch Stats",
+    "batch.update": "Batch Update: %b",
+    "max.updates.per.tick": "Max Updates per Tick: %d",
+    "player.radius.check": "Player Radius Check: %d",
+    "currently.updating": "Currently Updating %d plants.",
+    "invalid.interval": "Invalid interval."
+    
+  }
