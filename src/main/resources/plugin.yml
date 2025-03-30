@@ -1,5 +1,5 @@
 name: PlantWatch
-version: 1.0
+version: 1.1
 main: com.mishanstvo.plantwatch.PlantWatchPlugin
 api-version: 1.21
 description: A plugin to keep chunks with growing blocks loaded and updated.
@@ -15,15 +15,15 @@ commands:
         usage: /plantwatch reloadconfig
         permission: plantwatch.reloadconfig
       pause:
-        description: Pause chunk updates.
+        description: Pause block updates.
         usage: /plantwatch pause
         permission: plantwatch.pause
       resume:
-        description: Resume chunk updates.
+        description: Resume block updates.
         usage: /plantwatch resume
         permission: plantwatch.resume
       stats:
-        description: Get statistics about chunk updates.
+        description: Get statistics about block updates.
         usage: /plantwatch stats
         permission: plantwatch.stats
 permissions:
