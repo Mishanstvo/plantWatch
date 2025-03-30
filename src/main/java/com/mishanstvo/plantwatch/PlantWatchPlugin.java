@@ -29,7 +29,9 @@
     import java.sql.SQLException;
     import java.util.List;
     import java.util.Random;
-    import java.util.logging.Level;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
     import java.util.ArrayList;
     import com.google.gson.Gson;
     import com.google.gson.JsonElement;
@@ -43,6 +45,7 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.Enumeration;
+
     
 
     public class PlantWatchPlugin extends JavaPlugin implements Listener {
@@ -58,8 +61,13 @@ import java.util.Enumeration;
         private final Random random = new Random();
         //private int plantsBeingUpdated = 0; // Переменная для отслеживания обновляемых блоков
         private int currentlyUpdating = 0; // Переменная для отслеживания количества обновляемых растений
+        private int databaseThreads = 1;
         private Map<String, String> translations = new HashMap<>();
         private String currentLanguage;
+        //private final ExecutorService dbExecutor = Executors.newFixedThreadPool(1); // 2 потока для вставки и удаления
+        //private final ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
+
+        private ExecutorService dbExecutor;
 
 
         @Override
@@ -84,7 +92,9 @@ public void onEnable() {
     saveDefaultConfig();
     configFile = new File(getDataFolder(), "config.yml");
     config = YamlConfiguration.loadConfiguration(configFile);
-
+    // Получение количества потоков из конфигурации
+    databaseThreads = getConfig().getInt("database-threads", 1); // Значение по умолчанию 1
+    dbExecutor = Executors.newFixedThreadPool(databaseThreads);
     updateInterval = config.getInt("update-interval", 20);
     batchUpdate = config.getBoolean("batch-update", false);
     maxUpdatesPerTick = config.getInt("max-updates-per-tick", 10);
@@ -257,6 +267,7 @@ public void onBlockPlace(BlockPlaceEvent event) {
     if (trackedBlocks.contains(block.getType())) {
         // Проверяем, что блок не закомментирован в конфиге
         if (config.getStringList("tracked-blocks").contains(block.getType().name())) {
+            dbExecutor.execute(() -> {
             try (PreparedStatement stmt = connection.prepareStatement(
                     "INSERT OR IGNORE INTO tracked_blocks (x, y, z, world, type, player) VALUES (?, ?, ?, ?, ?, ?)")) {
                 stmt.setInt(1, block.getX());
@@ -270,6 +281,7 @@ public void onBlockPlace(BlockPlaceEvent event) {
             } catch (SQLException e) {
                 getLogger().log(Level.SEVERE, "Failed to insert block into database!", e);
             }
+        });
         }
     }
 }
@@ -281,6 +293,7 @@ public void onBlockBreak(BlockBreakEvent event) {
     // Проверяем, отслеживается ли блок в конфиге
     if (trackedBlocks.contains(block.getType())) {
         // Удаляем блок из базы данных, если он был разрушен
+        dbExecutor.execute(() -> {
         try (PreparedStatement stmt = connection.prepareStatement(
                 "DELETE FROM tracked_blocks WHERE x = ? AND y = ? AND z = ? AND world = ?")) {
             stmt.setInt(1, block.getX());
@@ -292,6 +305,7 @@ public void onBlockBreak(BlockBreakEvent event) {
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Failed to remove block from database!", e);
         }
+    });
     }
 }
 private void removeUntrackedPlants() {

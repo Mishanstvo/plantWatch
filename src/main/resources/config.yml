@@ -1,6 +1,7 @@
 update-interval: 2000
 batch-update: false
 player-radius-check: 160
+database-threads: 1
 lang: "en"  # Добавляем параметр для выбора языка
 tracked-blocks:
   - WHEAT  # Пшеница
